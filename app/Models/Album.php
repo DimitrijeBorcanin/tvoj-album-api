@@ -30,4 +30,12 @@ class Album extends Model
     public function orders(){
         return $this->hasMany(Order::class);
     }
+
+    public static function boot(){
+        parent::boot();
+
+        static::deleting(function($model) {
+            $model->stickers()->delete();
+        });
+    }
 }

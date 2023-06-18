@@ -57,4 +57,13 @@ class User extends Authenticatable
     public function albums(){
         return $this->hasMany(Album::class);
     }
+
+    public static function boot(){
+        parent::boot();
+
+        static::deleting(function($model) {
+            $model->tokens()->delete();
+            $model->albums()->doesntHave('orders')->delete();
+        });
+    }
 }

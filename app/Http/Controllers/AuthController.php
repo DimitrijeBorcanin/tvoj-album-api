@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -84,7 +85,7 @@ class AuthController extends Controller
                 ], 422);
             }
 
-            $user = User::create($request->only('email', 'password', 'first_name', 'last_name', 'phone', 'address', 'city', 'zip'));
+            $user = User::create($request->only('email', 'first_name', 'last_name', 'phone', 'address', 'city', 'zip') + ['password' => Hash::make($request->password)]);
 
             $user->sendEmailVerificationNotification();
 
@@ -93,6 +94,11 @@ class AuthController extends Controller
             return response()->json($user);
         } catch (\Throwable $e) {
             DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 }

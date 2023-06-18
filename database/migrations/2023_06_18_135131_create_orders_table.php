@@ -25,7 +25,9 @@ return new class extends Migration
             $table->integer('zip');
             $table->string('note', 500)->nullable();
             $table->dateTime('ordered');
+            $table->dateTime('cancelled')->nullable();
             $table->dateTime('accepted')->nullable();
+            $table->dateTime('denied')->nullable();
             $table->dateTime('delivery')->nullable();
             $table->dateTime('payment')->nullable();
             $table->timestamps();

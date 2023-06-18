@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('city');
             $table->integer('zip');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
