@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,3 +33,6 @@ Route::prefix('profile')->middleware(['auth:sanctum', 'verified'])->group(functi
     Route::put('/', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/change-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
 });
+
+Route::post('/forgot-password', [ResetPasswordController::class, 'sendEmail'])->name('password.send');
+Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');

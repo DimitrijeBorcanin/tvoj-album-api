@@ -65,7 +65,7 @@ class ProfileController extends Controller
             $validation = Validator::make(
                 $request->all(),
                 [
-                    'password' => 'required|confirmed'
+                    'password' => 'required|confirmed|string|min:8|max:150'
                 ]
             );
     

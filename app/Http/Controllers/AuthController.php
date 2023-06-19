@@ -67,7 +67,7 @@ class AuthController extends Controller
                 $request->all(),
                 [
                     'email' => 'required|email|unique:users',
-                    'password' => 'required|confirmed',
+                    'password' => 'required|confirmed|string|min:8|max:150',
                     'first_name' => 'required|string|max:100',
                     'last_name' => 'required|string|max:100',
                     'phone' => 'required|string|regex:/^[+]?\d{9,13}$/',
