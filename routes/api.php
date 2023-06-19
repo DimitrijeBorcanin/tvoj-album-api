@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,3 +38,12 @@ Route::prefix('profile')->middleware(['auth:sanctum', 'verified'])->group(functi
 
 Route::post('/forgot-password', [ResetPasswordController::class, 'sendEmail'])->name('password.send');
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
+
+Route::prefix('templates')->group(function () {
+    Route::get('/{template}', [TemplateController::class, 'show'])->name('templates.show');
+});
+
+Route::prefix('albums')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/', [AlbumController::class, 'index'])->name('templates.index');
+    Route::get('/{album}', [AlbumController::class, 'show'])->name('templates.show');
+});

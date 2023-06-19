@@ -13,7 +13,11 @@ class ProfileController extends Controller
 {
     public function show(){
         $user = User::findOrFail(Auth::id());
-        return response()->json($user);
+        return response()->json([
+            'status' => true,
+            'messages' => 'Uspešno.',
+            'data' => $user
+        ], 200);
     }
 
     public function update(Request $request){

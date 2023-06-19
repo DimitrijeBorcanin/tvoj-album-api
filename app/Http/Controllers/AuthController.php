@@ -91,7 +91,11 @@ class AuthController extends Controller
 
             DB::commit();
 
-            return response()->json($user);
+            return response()->json([
+                'status' => true,
+                'messages' => 'Uspešno.',
+                'data' => $user
+            ], 200);
         } catch (\Throwable $e) {
             DB::rollBack();
 

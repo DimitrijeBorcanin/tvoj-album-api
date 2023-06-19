@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->smallInteger('page_no');
             $table->smallInteger('sticker_no');
             $table->timestamps();

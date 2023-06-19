@@ -11,6 +11,8 @@ class Album extends Model
 
     protected $fillable = ['title', 'font_id', 'user_id', 'template_id'];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     public function user(){
         return $this->belongsTo(User::class);
     }
