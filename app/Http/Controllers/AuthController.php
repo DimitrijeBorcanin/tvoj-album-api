@@ -49,7 +49,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Uspešna prijava.',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
+                'data' => ["token" => $user->createToken("API TOKEN")->plainTextToken]
             ], 200);
         } catch (\Throwable $e) {
             return response()->json([
@@ -80,7 +80,7 @@ class AuthController extends Controller
             if ($validation->fails()) {
                 return response()->json([
                     'status' => false,
-                    'messages' => 'Podaci su neispravni.',
+                    'message' => 'Podaci su neispravni.',
                     'errors' => $validation->errors()
                 ], 422);
             }
@@ -93,7 +93,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'status' => true,
-                'messages' => 'Uspešno.',
+                'message' => 'Uspešno.',
                 'data' => $user
             ], 200);
         } catch (\Throwable $e) {

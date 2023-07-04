@@ -46,4 +46,5 @@ Route::prefix('templates')->group(function () {
 Route::prefix('albums')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/', [AlbumController::class, 'index'])->name('templates.index');
     Route::get('/{album}', [AlbumController::class, 'show'])->name('templates.show');
+    Route::post('/', [AlbumController::class, 'store'])->name('templates.store');
 });
