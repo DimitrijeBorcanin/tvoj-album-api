@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FontController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\TemplateController;
@@ -47,4 +48,8 @@ Route::prefix('albums')->middleware(['auth:sanctum', 'verified'])->group(functio
     Route::get('/', [AlbumController::class, 'index'])->name('templates.index');
     Route::get('/{album}', [AlbumController::class, 'show'])->name('templates.show');
     Route::post('/', [AlbumController::class, 'store'])->name('templates.store');
+});
+
+Route::prefix('fonts')->group(function () {
+    Route::get('/', [FontController::class, 'index'])->name('fonts.index');
 });
