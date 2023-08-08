@@ -16,6 +16,11 @@
 
 @endforeach
 
+@isset($note)
+    Razlog odbijanja: <br/>
+    {{$note}}
+@endisset
+
 {{-- Action Button --}}
 @isset($actionText)
 <?php

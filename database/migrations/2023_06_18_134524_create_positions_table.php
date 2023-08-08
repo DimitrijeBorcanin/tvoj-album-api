@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('template_id')->constrained();
             $table->smallInteger('page');
             $table->string('position', 10);
-            $table->smallInteger('top');
-            $table->smallInteger('left');
-            $table->smallInteger('width');
-            $table->smallInteger('height');
+            $table->decimal('top', 5, 2);
+            $table->decimal('left', 5, 2);
+            $table->decimal('width', 5, 2);
+            $table->decimal('height', 5, 2);
             $table->timestamps();
         });
     }

@@ -18,7 +18,7 @@ class VerifyEmail extends NotificationsVerifyEmail
             return call_user_func(static::$toMailCallback, $notifiable);
         }
         return (new MailMessage)
-            ->subject('Verifikacija email adrese')
+            ->subject('Tvoj Album - Verifikacija email adrese')
             ->line('Radi verifikacije email adrese klikni ne dugme ispod.')
             ->action(
                 'Verifikuj email adresu',

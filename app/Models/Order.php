@@ -24,7 +24,9 @@ class Order extends Model
         'ordered', 
         'accepted', 
         'delivery', 
-        'payment'
+        'payment',
+        'quantity',
+        'consent'
     ];
 
     public function album(){

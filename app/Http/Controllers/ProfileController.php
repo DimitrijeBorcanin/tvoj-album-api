@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 class ProfileController extends Controller
 {
     public function show(){
-        $user = User::findOrFail(Auth::id());
+        $user = User::findOrFail(auth('sanctum')->user()->id);
         return response()->json([
             'status' => true,
             'messages' => 'Uspešno.',
@@ -42,7 +42,7 @@ class ProfileController extends Controller
                 ], 422);
             }
     
-            Auth::user()->update($validation->valid());
+            auth('sanctum')->user()->update($validation->valid());
 
             return response()->json([
                 'status' => true,
@@ -81,8 +81,8 @@ class ProfileController extends Controller
                 ], 422);
             }
     
-            Auth::user()->password = Hash::make($request->password);
-            Auth::user()->save();
+            auth('sanctum')->user()->password = Hash::make($request->password);
+            auth('sanctum')->user()->save();
     
             return response()->json([
                 'status' => true,

@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FontController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\StickerController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
@@ -23,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'verified'])->name('auth.logout');
     Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
 });
 
@@ -45,11 +49,34 @@ Route::prefix('templates')->group(function () {
 });
 
 Route::prefix('albums')->middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/', [AlbumController::class, 'index'])->name('templates.index');
-    Route::get('/{album}', [AlbumController::class, 'show'])->name('templates.show');
-    Route::post('/', [AlbumController::class, 'store'])->name('templates.store');
+    Route::get('/', [AlbumController::class, 'index'])->name('albums.index');
+    Route::get('/pricing', [AlbumController::class, 'getPricing'])->name('albums.pricing');
+    Route::get('/{album}', [AlbumController::class, 'show'])->name('albums.show');
+    Route::post('/', [AlbumController::class, 'store'])->name('albums.store');
+    Route::put('/{album}', [AlbumController::class, 'update'])->name('albums.update');
+    Route::post('/{album}/upload', [AlbumController::class, 'insertSticker'])->name('albums.sticker');
+    Route::post('/{album}/delete', [AlbumController::class, 'deleteSticker'])->name('albums.sticker-delete');
+    Route::delete('/{album}', [AlbumController::class, 'destroy'])->name('albums.delete');
 });
 
 Route::prefix('fonts')->group(function () {
     Route::get('/', [FontController::class, 'index'])->name('fonts.index');
+});
+
+Route::prefix('orders')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/admin', [OrderController::class, 'indexAdmin'])->middleware(['admin'])->name('orders.indexAdmin');
+    Route::post('/{order}/download', [OrderController::class, 'downloadStickers'])->middleware(['admin'])->name('orders.downloadStickers');
+    Route::post('/{album}', [OrderController::class, 'store'])->name('orders.store');
+    Route::patch('/{order}', [OrderController::class, 'changeStatus'])->name('orders.changeStatus');
+});
+
+Route::prefix('stickers')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/{album}', [StickerController::class, 'index'])->name('stickers.index');
+});
+
+Route::prefix('admin')->middleware((['auth:sanctum', 'verified', 'admin']))->group(function () {
+    Route::get('/statistics', [AdminController::class, 'statistics'])->name('admin.statistics');
+    Route::get('/config', [AdminController::class, 'getConfig'])->name('admin.getconfig');
+    Route::patch('/config', [AdminController::class, 'patchConfig'])->name('admin.patchconfig');
 });

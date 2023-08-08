@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('images/{albumId}/{fileName}', [ImageController::class, 'show'])->name('images');
+
+Route::get('orders/{order}/download', [OrderController::class, 'downloadStickers']);

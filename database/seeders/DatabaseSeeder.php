@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Enums\RoleEnum;
+use App\Models\Config;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -38,5 +39,7 @@ class DatabaseSeeder extends Seeder
             'token' => 'e124ceaa63aa99d944ae6c1e60bac4808af27713a67e8b2f9d3f2f3af6ddfd95',
             'abilities' => '["*"]'
         ]);
+
+        Config::create(["price" => 0, "delivery" => 0, "expense" => 0]);
     }
 }

@@ -36,7 +36,7 @@ class ResetPasswordNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Promena lozinke')
+            ->subject('Tvoj Album - Promena lozinke')
             ->line('Radi promene lozinke klikni ne dugme ispod.')
             ->action(
                 'Promeni lozinku',

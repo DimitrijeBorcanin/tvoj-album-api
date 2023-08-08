@@ -49,7 +49,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Uspešna prijava.',
-                'data' => ["token" => $user->createToken("API TOKEN")->plainTextToken]
+                'data' => ["token" => $user->createToken("API TOKEN")->plainTextToken, "name" => $user->first_name . " " . $user->last_name, "roleId" => $user->role_id]
             ], 200);
         } catch (\Throwable $e) {
             return response()->json([
@@ -104,5 +104,13 @@ class AuthController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function logout(Request $request){
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Uspešno.'
+        ], 200);
     }
 }
