@@ -17,9 +17,10 @@ class Sticker extends Model
     protected $appends = ['imageBase64'];
 
     public function getImageBase64Attribute() {
-        $imagePath = storage_path('app/images/' . $this->attributes['image']);
-        $image = "data:image/jpeg;base64,".base64_encode(file_get_contents($imagePath));
-        return $image;    
+        // $imagePath = storage_path('app/images/' . $this->attributes['image']);
+        // $image = "data:image/jpeg;base64,".base64_encode(file_get_contents($imagePath));
+        // return $image;    
+        return env("APP_URL") . "/images/" . $this->attributes["image"];
     }
 
     public function album(){

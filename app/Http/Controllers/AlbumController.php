@@ -43,7 +43,7 @@ class AlbumController extends Controller
         return response()->json([
             'status' => true,
             'messages' => 'Uspešno.',
-            'data' => $album->load('stickers')
+            'data' => $album
         ], 200);
     }
 

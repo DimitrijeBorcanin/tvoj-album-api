@@ -44,7 +44,7 @@ Route::prefix('profile')->middleware(['auth:sanctum', 'verified'])->group(functi
 Route::post('/forgot-password', [ResetPasswordController::class, 'sendEmail'])->name('password.send');
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
 
-Route::prefix('templates')->group(function () {
+Route::prefix('templates')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/{template}', [TemplateController::class, 'show'])->name('templates.show');
 });
 
@@ -59,7 +59,7 @@ Route::prefix('albums')->middleware(['auth:sanctum', 'verified'])->group(functio
     Route::delete('/{album}', [AlbumController::class, 'destroy'])->name('albums.delete');
 });
 
-Route::prefix('fonts')->group(function () {
+Route::prefix('fonts')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/', [FontController::class, 'index'])->name('fonts.index');
 });
 
@@ -73,6 +73,7 @@ Route::prefix('orders')->middleware(['auth:sanctum', 'verified'])->group(functio
 
 Route::prefix('stickers')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/{album}', [StickerController::class, 'index'])->name('stickers.index');
+    Route::get('/{album}/{position}', [StickerController::class, 'show'])->name('stickers.show');
 });
 
 Route::prefix('admin')->middleware((['auth:sanctum', 'verified', 'admin']))->group(function () {

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\AcceptedMail;
 use App\Mail\DeliveryMail;
 use App\Mail\DeniedMail;
+use App\Mail\OrderedAdminMail;
+use App\Mail\OrderedMail;
 use App\Models\Album;
 use App\Models\Config;
 use App\Models\Order;
@@ -105,6 +107,9 @@ class OrderController extends Controller
             $newAlbum->user_id = null;
             $newAlbum->save();
 
+            $price = Config::first()->price;
+            $order = Order::create($request->only('first_name', 'last_name', 'address', 'city', 'zip', 'phone', 'email', 'quantity', 'consent') + ['user_id' => auth('sanctum')->user()->id, 'album_id' => $newAlbum->id, 'price' => $price, 'ordered' => now()]);
+
             foreach($album->stickers as $sticker){
                 $image = $sticker->image;
                 $imageParts = explode("/", $image);
@@ -112,14 +117,14 @@ class OrderController extends Controller
 
                 $newSticker = $sticker->replicate();
                 $newSticker->album_id = $newAlbum->id;
-                $newSticker->image = 'order_albums/' . $newAlbum->id . '/' . $newAlbum->id . '_' . $imageParts2[1];
+                $newSticker->image = 'order_albums/' . $order->id . '/' . $order->id . '_' . $imageParts2[1];
                 $newSticker->save();
 
-                Storage::copy('images/albums/' . $album->id . '/' . $imageParts[2], 'images/order_albums/' . $newAlbum->id . '/' . $newAlbum->id . '_' . $imageParts2[1]);
+                Storage::copy('images/albums/' . $album->id . '/' . $imageParts[2], 'images/order_albums/' . $order->id . '/' . $order->id . '_' . $imageParts2[1]);
             }
 
-            $price = Config::first()->price;
-            $order = Order::create($request->only('first_name', 'last_name', 'address', 'city', 'zip', 'phone', 'email', 'quantity', 'consent') + ['user_id' => auth('sanctum')->user()->id, 'album_id' => $newAlbum->id, 'price' => $price, 'ordered' => now()]);
+            Mail::to($order->email)->send(new OrderedMail($order));
+            Mail::to(env("MAIL_FROM_ADDRESS"))->send(new OrderedAdminMail($order));
 
             DB::commit();
 
@@ -223,7 +228,7 @@ class OrderController extends Controller
     private function applyStatus($request, $orders){
         switch($request->filters["status"]){
             case "ordered":
-                $orders = $orders->whereNull('cancelled')->whereNull('accepted');
+                $orders = $orders->whereNull('cancelled')->whereNull('accepted')->whereNull('denied');
                 break;
             case "accepted":
                 $orders = $orders->whereNotNull('accepted')->whereNull('delivery');
