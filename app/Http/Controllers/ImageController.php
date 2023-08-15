@@ -12,18 +12,35 @@ use Throwable;
 class ImageController extends Controller
 {
     public function show($folder, $albumId, $fileName){
-        // $userId = auth('sanctum')->user()->id;
-        // if(!$userId){
-        //     return abort('403');
-        // }
 
-        // $order = Order::where('user_id', $userId)->first();
+        $userId = auth('sanctum')->user()->id;
+        if(!$userId){
+            return abort('403');
+        }
 
-        // if($order->album_id != $albumId){
-        //     return abort('403');
-        // }
+
+        $exists = null;
+        if($folder == "albums"){
+            $exists = Album::where('user_id', $userId)->where('id', $albumId)->first();
+        } else {
+            $exists = Order::where('user_id', $userId)->where('id', $albumId)->first();
+        }
+
+
+        if(!$exists && auth('sanctum')->user()->role_id != 1){
+            return abort('403');
+        }
 
         $imagePath = storage_path('app/images/' . $folder . '/' . $albumId . '/' . $fileName);
+        
+        // $width = 750; // your max width
+        // $height = 750; // your max height
+        // $img = \Image::make($imagePath);
+
+        // $img->height() > $img->width() ? $width=null : $height=null;
+        // $img->resize($width, $height, function ($constraint) {
+        //     $constraint->aspectRatio();
+        // });
         try {
             return response()->file($imagePath);
         } catch (Throwable $e){

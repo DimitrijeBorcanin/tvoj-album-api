@@ -19,6 +19,6 @@ Route::get('/', function () {
     return abort(404);
 });
 
-Route::get('images/{folder}/{albumId}/{fileName}', [ImageController::class, 'show'])->name('images');
+Route::get('images/{folder}/{albumId}/{fileName}', [ImageController::class, 'show'])->middleware('token.param')->name('images');
 
 // Route::get('orders/{order}/download', [OrderController::class, 'downloadStickers']);
