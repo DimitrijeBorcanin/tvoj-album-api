@@ -32,7 +32,7 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('email')->group(function () {
     Route::get('/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
-    Route::get('/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+    Route::post('/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 });
 
 Route::prefix('profile')->middleware(['auth:sanctum', 'verified'])->group(function () {

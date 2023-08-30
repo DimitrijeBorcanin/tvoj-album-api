@@ -27,7 +27,7 @@ class VerificationController extends Controller
                 $user->markEmailAsVerified();
             }
 
-            return redirect()->to('https://napravi.tvojalbum.com/prijava');
+            return view('verified');
         } catch (\Throwable $e) {
             return response()->json([
                 'status' => false,

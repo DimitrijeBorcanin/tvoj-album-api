@@ -377,7 +377,11 @@ class AlbumController extends Controller
     }
 
     public function destroy(Album $album){
+        $album->stickers()->delete();
         $album->delete();
+        $filesToDelete = Storage::allFiles('images/albums/' . $album->id);
+        Storage::delete($filesToDelete);
+        Storage::deleteDirectory('images/albums/' . $album->id);
         return response()->json([
             'status' => true,
             'messages' => 'Uspešno.',

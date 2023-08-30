@@ -36,7 +36,7 @@ class OrderController extends Controller
         }
         
         $count = $orders->count();
-        $orders = $orders->orderBy('ordered', 'desc')->offset($page - 1 * $this->limit)->limit($this->limit)->get();
+        $orders = $orders->orderBy('ordered', 'desc')->offset(($page - 1) * $this->limit)->limit($this->limit)->get();
 
         return response()->json([
             'status' => true,
@@ -62,7 +62,7 @@ class OrderController extends Controller
         }
         
         $count = $orders->count();
-        $orders = $orders->orderBy('ordered', 'desc')->offset($page - 1 * $this->limit)->limit($this->limit)->get();
+        $orders = $orders->orderBy('ordered', 'desc')->offset(($page - 1) * $this->limit)->limit($this->limit)->get();
 
         return response()->json([
             'status' => true,
@@ -88,7 +88,8 @@ class OrderController extends Controller
                 'zip' => 'required|integer|min:11000|max:40000',
                 'email' => 'required|email',
                 'quantity' => 'required|integer|min:1',
-                'consent' => 'required|boolean'
+                'consent' => 'required|boolean',
+                'comment' => 'nullable|string|max:500'
             ]  
         );
 
@@ -108,7 +109,7 @@ class OrderController extends Controller
             $newAlbum->save();
 
             $price = Config::first()->price;
-            $order = Order::create($request->only('first_name', 'last_name', 'address', 'city', 'zip', 'phone', 'email', 'quantity', 'consent') + ['user_id' => auth('sanctum')->user()->id, 'album_id' => $newAlbum->id, 'price' => $price, 'ordered' => now()]);
+            $order = Order::create($request->only('first_name', 'last_name', 'address', 'city', 'zip', 'phone', 'email', 'quantity', 'consent', 'comment') + ['user_id' => auth('sanctum')->user()->id, 'album_id' => $newAlbum->id, 'price' => $price, 'ordered' => now()]);
 
             foreach($album->stickers as $sticker){
                 $image = $sticker->image;
@@ -144,6 +145,7 @@ class OrderController extends Controller
 
     public function changeStatus(Request $request, Order $order){
         try {
+            DB::beginTransaction();
             if($request->status == "accepted"){
                 $config = Config::first();
                 $validation = Validator::make(
@@ -213,11 +215,22 @@ class OrderController extends Controller
                 Mail::to($order->email)->send(new DeliveryMail($order));
             }
 
+            if($request->status == "denied" || $request->status == "payment"){
+                $album = Album::find($order->album_id);
+                $album->stickers()->delete();
+                $filesToDelete = Storage::allFiles('images/order_albums/' . $order->id);
+                Storage::delete($filesToDelete);
+                Storage::deleteDirectory('images/order_albums/' . $order->id);
+            }
+
+            DB::commit();
+
             return response()->json([
                 'status' => true,
                 'messages' => 'Uspešno.',
             ], 200);
         } catch (\Throwable $e){
+            DB::rollBack();
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()
