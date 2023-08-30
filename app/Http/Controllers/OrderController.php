@@ -27,7 +27,7 @@ class OrderController extends Controller
     public function index(Request $request){
         $page = $request->page ?? 1;
 
-        $orders = Order::with('album.template')->where('user_id', auth('sanctum')->user()->id);
+        $orders = Order::with('album.template', 'album.font')->where('user_id', auth('sanctum')->user()->id);
 
         if($request->filters){
             if($request->filters["status"]){
@@ -53,7 +53,7 @@ class OrderController extends Controller
     public function indexAdmin(Request $request){
         $page = $request->page ?? 1;
 
-        $orders = Order::with('album.template');
+        $orders = Order::with('album.template', 'album.font');
 
         if($request->filters){
             if($request->filters["status"]){
