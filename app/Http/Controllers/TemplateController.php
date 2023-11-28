@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class TemplateController extends Controller
 {
+    public function index(){
+        return response()->json([
+            'status' => true,
+            'messages' => 'Uspešno.',
+            'data' => Template::all()
+        ], 200);
+    }
+
     public function show(Template $template){
         $template->load('positions');
         $positions = Position::where('template_id', $template->id)->orderBy('page')->get();

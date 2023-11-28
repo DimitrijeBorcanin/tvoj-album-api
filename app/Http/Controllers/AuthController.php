@@ -34,7 +34,7 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'Pogrešni kredencijali.'
-                ], 401);
+                ], 422);
             }
 
             $user = User::where('email', $request->email)->first();

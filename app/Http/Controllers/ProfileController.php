@@ -63,7 +63,7 @@ class ProfileController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'Pogrešna lozinka.'
-                ], 401);
+                ], 422);
             }
     
             $validation = Validator::make(
@@ -103,7 +103,7 @@ class ProfileController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => 'Pogrešna lozinka.'
-                ], 401);
+                ], 422);
             }
 
             Auth::user()->delete();

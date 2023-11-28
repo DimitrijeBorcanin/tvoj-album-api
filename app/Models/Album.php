@@ -9,7 +9,7 @@ class Album extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'font_id', 'user_id', 'template_id'];
+    protected $fillable = ['title', 'font_id', 'user_id', 'template_id', 'title_size', 'title_color', 'title_align', 'title_width', 'title_top', 'title_left'];
 
     protected $hidden = ['created_at', 'updated_at'];
 

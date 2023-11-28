@@ -45,6 +45,7 @@ Route::post('/forgot-password', [ResetPasswordController::class, 'sendEmail'])->
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
 
 Route::prefix('templates')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/', [TemplateController::class, 'index'])->name('templates.index');
     Route::get('/{template}', [TemplateController::class, 'show'])->name('templates.show');
 });
 

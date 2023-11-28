@@ -107,7 +107,13 @@ class AlbumController extends Controller
             $request->all(),
             [
                 'title' => 'required|string|max:50',
-                'font_id' => 'required|exists:fonts,id'
+                'font_id' => 'required|exists:fonts,id',
+                'title_size' => 'required|numeric|min:1|max:6',
+                'title_color' => 'required|string|max:10',
+                'title_align' => 'required|string|max:10',
+                'title_width' => 'required|numeric|min:1|max:100',
+                'title_top' => 'required|numeric|min:5|max:95',
+                'title_left' => 'required|numeric|min:0|max:90'
             ]
         );
 
@@ -119,7 +125,7 @@ class AlbumController extends Controller
             ], 422);
         }
 
-        $album->update($request->only('title', 'font_id'));
+        $album->update($request->only('title', 'font_id', 'title_size', 'title_color', 'title_align', 'title_width', 'title_top', 'title_left'));
 
         return response()->json([
             'status' => true,
