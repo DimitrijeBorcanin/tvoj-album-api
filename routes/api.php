@@ -51,7 +51,8 @@ Route::prefix('templates')->middleware(['auth:sanctum', 'verified'])->group(func
 
 Route::prefix('albums')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/', [AlbumController::class, 'index'])->name('albums.index');
-    Route::get('/pricing', [AlbumController::class, 'getPricing'])->name('albums.pricing');
+    Route::get('/pricing', [AlbumController::class, 'getPricings'])->name('albums.pricings');
+    Route::get('/pricing/{templateId}', [AlbumController::class, 'getPricing'])->name('albums.pricing');
     Route::get('/{album}', [AlbumController::class, 'show'])->name('albums.show');
     Route::post('/', [AlbumController::class, 'store'])->name('albums.store');
     Route::put('/{album}', [AlbumController::class, 'update'])->name('albums.update');
@@ -79,6 +80,7 @@ Route::prefix('stickers')->middleware(['auth:sanctum', 'verified'])->group(funct
 
 Route::prefix('admin')->middleware((['auth:sanctum', 'verified', 'admin']))->group(function () {
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('admin.statistics');
-    Route::get('/config', [AdminController::class, 'getConfig'])->name('admin.getconfig');
+    Route::get('/config', [AdminController::class, 'getAllConfigs'])->name('admin.getallconfigs');
+    Route::get('/config/{templateId}', [AdminController::class, 'getConfig'])->name('admin.getconfig');
     Route::patch('/config', [AdminController::class, 'patchConfig'])->name('admin.patchconfig');
 });

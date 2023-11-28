@@ -374,11 +374,19 @@ class AlbumController extends Controller
         }
     }
 
-    public function getPricing(){
+    public function getPricings(){
         return response()->json([
             'status' => true,
             'messages' => 'Uspešno.',
-            'data' => Config::select('price', 'delivery')->first()
+            'data' => Config::select('price', 'delivery', 'template_id')->get()
+        ], 200);
+    }
+
+    public function getPricing($templateId){
+        return response()->json([
+            'status' => true,
+            'messages' => 'Uspešno.',
+            'data' => Config::where('template_id', $templateId)->select('price', 'delivery')->first()
         ], 200);
     }
 

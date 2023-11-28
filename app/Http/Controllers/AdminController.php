@@ -37,11 +37,19 @@ class AdminController extends Controller
         ], 200);
     }
 
-    public function getConfig(){
+    public function getAllConfigs(){
         return response()->json([
             'status' => true,
             'messages' => 'Uspešno.',
-            'data' => Config::first()
+            'data' => Config::all()
+        ], 200);
+    }
+
+    public function getConfig($templateId){
+        return response()->json([
+            'status' => true,
+            'messages' => 'Uspešno.',
+            'data' => Config::where('template_id', $templateId)->first()
         ], 200);
     }
 
@@ -51,7 +59,8 @@ class AdminController extends Controller
             [
                 'price' => 'required|numeric',
                 'delivery' => 'required|numeric',
-                'expense' => 'required|numeric'
+                'expense' => 'required|numeric',
+                'template_id' => 'required|exists:templates,id'
             ]
         );
 
@@ -64,7 +73,7 @@ class AdminController extends Controller
         }
 
         try {
-            $config = Config::first();
+            $config = Config::where('template_id', $request->template_id)->first();
             $config->update($request->only('price', 'delivery', 'expense'));
 
             return response()->json([
