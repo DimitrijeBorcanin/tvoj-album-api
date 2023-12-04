@@ -5,7 +5,7 @@ Tvoja porudžbina je poslata. Očekuj da bude dostavljena u naredna 2 - 3 radna 
 #{{$order->id}} <br/>
 Datum: {{$order->ordered}}
 Količina: {{$order->quantity}} <br/>
-Ukupna cena: {{$order->quantity * $order->price}} RSD <br/>
+Ukupna cena: {{$order->price}} RSD <br/>
 
 Ime i prezime: {{$order->first_name}} {{$order->last_name}} <br/>
 Adresa: {{$order->address}}, {{$order->zip}} {{$order->city}} <br/>

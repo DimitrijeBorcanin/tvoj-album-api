@@ -108,7 +108,8 @@ class OrderController extends Controller
             $newAlbum->user_id = null;
             $newAlbum->save();
 
-            $price = Config::first()->price;
+			$config = Config::where('template_id', $album->template_id)->first();
+            $price = $config->price * $request->quantity + $config->delivery;
             $order = Order::create($request->only('first_name', 'last_name', 'address', 'city', 'zip', 'phone', 'email', 'quantity', 'consent', 'comment') + ['user_id' => auth('sanctum')->user()->id, 'album_id' => $newAlbum->id, 'price' => $price, 'ordered' => now()]);
 
             foreach($album->stickers as $sticker){
@@ -147,7 +148,7 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
             if($request->status == "accepted"){
-                $config = Config::first();
+                $config = Config::where('template_id', $order->album->template_id)->first();
                 $validation = Validator::make(
                     $request->all(),
                     [
@@ -177,7 +178,7 @@ class OrderController extends Controller
                     ], 422);
                 }
 
-                $order->price = $request->price + $request->delivery;
+                $order->price = $order->quantity * $request->price + $request->delivery;
                 $order->expense = $request->expense;
             }
 
