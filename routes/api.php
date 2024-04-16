@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\StickerController;
 use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\TitleController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -83,4 +84,13 @@ Route::prefix('admin')->middleware((['auth:sanctum', 'verified', 'admin']))->gro
     Route::get('/config', [AdminController::class, 'getAllConfigs'])->name('admin.getallconfigs');
     Route::get('/config/{templateId}', [AdminController::class, 'getConfig'])->name('admin.getconfig');
     Route::patch('/config', [AdminController::class, 'patchConfig'])->name('admin.patchconfig');
+});
+
+Route::prefix('titles')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/album/{album}', [TitleController::class, 'getByAlbum'])->name('titles.getbyalbum');
+    Route::get('/{title}', [TitleController::class, 'show'])->name('titles.show');
+    Route::post('/', [TitleController::class, 'store'])->name('titles.store');
+    Route::put('/{title}', [TitleController::class, 'update'])->name('titles.update');
+    Route::patch('/change-page/{title}', [TitleController::class, 'changePage'])->name('titles.changepage');
+    Route::delete('/{title}', [TitleController::class, 'destroy'])->name('titles.destroy');
 });

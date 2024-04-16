@@ -33,6 +33,10 @@ class Album extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function titles(){
+        return $this->hasMany(Title::class);
+    }
+
     public static function boot(){
         parent::boot();
 

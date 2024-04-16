@@ -9,7 +9,9 @@ use App\Mail\OrderedAdminMail;
 use App\Mail\OrderedMail;
 use App\Models\Album;
 use App\Models\Config;
+use App\Models\Font;
 use App\Models\Order;
+use App\Models\Title;
 use App\Notifications\DeniedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -107,6 +109,8 @@ class OrderController extends Controller
             $newAlbum = $album->replicate();
             $newAlbum->user_id = null;
             $newAlbum->save();
+
+            DB::statement("INSERT INTO titles (album_id, page, content, font_id, size, color, top, `left`, width, align) SELECT $newAlbum->id, page, content, font_id, size, color, top, `left`, width, align FROM titles WHERE album_id = $album->id");
 
 			$config = Config::where('template_id', $album->template_id)->first();
             $price = $config->price * $request->quantity + $config->delivery;
@@ -283,6 +287,19 @@ class OrderController extends Controller
         foreach($stickers as $sticker){
             $zip->addFile(storage_path('app/images/' . $sticker->image), $sticker->image);
         }
+
+        $text = "";
+        $fonts = Font::all();
+
+        $text .= "Naslov: " . $album->title . " - Font: " . $fonts->where('id', $album->font_id)->first()->title . " - Boja: " . $album->title_color . "\n";
+        $titles = Title::where('album_id', $order->album_id)->orderBy('page')->get();
+        foreach($titles as $title){
+            $text .= $title->content . " - Str. " . $title->page . " - Font: " . $fonts->where('id', $title->font_id)->first()->title . " - Boja: " . $title->color . "\n";
+        }
+
+        $zip->addFromString($order->id . "_naslovi.txt", $text);
+
+
         $zip->close();
         
         return response()->download($zip_file)->deleteFileAfterSend(true);
